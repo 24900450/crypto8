@@ -9,61 +9,47 @@ It has a fixed block size of 128 bits, and a key size of 128, 192, or 256 bits.
 AES operates on a 4 × 4 column-major order array of bytes, termed the state
 # PROGRAM:
 ```c
-#include <stdio.h> 
-#include <string.h> 
+#include <stdio.h>
+#include <string.h>
 
-void simpleAESEncrypt(char *plaintext, char *key, char *ciphertext) 
+int main()
 {
-    int i; 
-    for (i = 0; i < strlen(plaintext); i++) 
-    { 
-        ciphertext[i] = plaintext[i] ^ key[i % strlen(key)]; 
-    } 
-    ciphertext[i] = '\0'; 
-} 
+    char text[50], key[50];
+    int i, len;
 
-void simpleAESDecrypt(char *ciphertext, char *key, char *decryptedText) 
-{ 
-    int i; 
-    for (i = 0; i < strlen(ciphertext); i++) 
-    {                                                                
-        decryptedText[i] = ciphertext[i] ^ key[i % strlen(key)]; 
-    } 
-    decryptedText[i] = '\0'; 
-} 
+    printf("Enter text: ");
+    scanf("%s", text);
 
-void printASCII(char *ciphertext) 
-{ 
-    printf("Encrypted Message (ASCII values): "); 
-    for (int i = 0; i < strlen(ciphertext); i++) 
-    { 
-        printf("%d ", (unsigned char)ciphertext[i]); 
-    } 
-    printf("\n"); 
-} 
+    printf("Enter key: ");
+    scanf("%s", key);
 
-int main() 
-{ 
-    char plaintext[100], key[100], ciphertext[100], decryptedText[100]; 
+    len = strlen(text);
 
-    printf("Enter the plaintext: "); 
-    scanf("%s", plaintext); 
+    // Encryption (AddRoundKey + simple shift)
+    for(i = 0; i < len; i++)
+    {
+        text[i] = (text[i] ^ key[i % strlen(key)]) + 1;
+    }
 
-    printf("Enter the key: ");  
-    scanf("%s", key);  
+    printf("Encrypted: ");
+    for(i = 0; i < len; i++)
+    {
+        printf("%02X ", (unsigned char)text[i]);
+    }
+    // Decryption
+    for(i = 0; i < len; i++)
+    {
+        text[i] = (text[i] - 1) ^ key[i % strlen(key)];
+    }
 
-    simpleAESEncrypt(plaintext, key, ciphertext); 
-    printASCII(ciphertext);  
+    printf("\nDecrypted Text: %s\n", text);
 
-    simpleAESDecrypt(ciphertext, key, decryptedText); 
-    printf("Decrypted Message: %s\n", decryptedText); 
-
-    return 0; 
+    return 0;
 }
 ```
 
 # OUTPUT:
-<img width="677" height="302" alt="image" src="https://github.com/user-attachments/assets/f1a1dccb-1d10-47f1-bd51-316902981c90" /><br>
+<img width="440" height="307" alt="image" src="https://github.com/user-attachments/assets/9da32f46-65ed-45db-9326-1613a6f70fd7" /><br>
 # RESULT:
 Hence, Advanced Encryption Standard (AES) Algorithm for a practical application like URL Encryption is done successfully.
 
